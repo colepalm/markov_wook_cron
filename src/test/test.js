@@ -6,6 +6,7 @@ const fetch = require('node-fetch')
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const { Options } = require("selenium-webdriver/chrome");
 
 chai.use(chaiAsPromised);
 
@@ -22,18 +23,27 @@ const driver = new webdriver.Builder()
     .build();
 
 describe('Make Wook Post', () => {
+  console.log('describe')
   before(async () => {
-    await driver.manage().setTimeouts({
-      implicit: timeout,
-      pageLoad: timeout,
-      script: timeout
-    })
+    console.log('before')
+    try {
+      await driver.manage().setTimeouts({
+        implicit: timeout,
+        pageLoad: timeout,
+        script: timeout
+      })
+    } catch(err) {
+        console.log(err)
+      }
   });
 
   it('generate post', async () => {
     try {
+      console.log("here")
       const res = await fetch('https://wookmark.fly.dev/generate');
+      console.log("here")
       this.wookPost = await res.text()
+      console.log(this.wookPost)
     } catch (err) {
       console.log(err)
     }

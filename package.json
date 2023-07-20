@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Flask project to scrape the musings of wooks and markovify them",
   "scripts": {
-    "cron": "node server.js",
+    "cron": "node src/server.js",
     "test": "mocha --timeout 999999 src/test/test.js"
   },
   "repository": {
@@ -26,11 +26,7 @@
     "mocha": "^5.1.1",
     "node-cron": "^3.0.2",
     "node-fetch": "^2.6.0",
-    "selenium-webdriver": "^4.0.0-alpha.7",
-    "libglib2.0-0":"2.50.3-2",
-    "libnss3":"2:3.26.2-1.1+deb9u1",
-    "libgconf-2-4":"3.2.6-4+b1",
-    "libfontconfig1":"2.11.0-6.7+b1"
+    "selenium-webdriver": "^4.0.0-alpha.7"
   },
   "devDependencies": {
     "webdriver-manager": "^12.1.7"
