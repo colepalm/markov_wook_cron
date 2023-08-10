@@ -6,7 +6,6 @@ const fetch = require('node-fetch')
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const { Options } = require("selenium-webdriver/chrome");
 
 chai.use(chaiAsPromised);
 
@@ -17,15 +16,19 @@ const screen = {
 
 const timeout = 99999999999999;
 
+const options = new chrome.Options()
+
+options.addArguments('--disable-dev-shm-usage')
+options.addArguments('--no-sandbox')
+options.addArguments('--headless')
+
 const driver = new webdriver.Builder()
     .forBrowser('chrome')
-    .setChromeOptions(new chrome.Options().headless().windowSize(screen))
+    .setChromeOptions(options)
     .build();
 
 describe('Make Wook Post', () => {
-  console.log('describe')
   before(async () => {
-    console.log('before')
     try {
       await driver.manage().setTimeouts({
         implicit: timeout,
@@ -39,11 +42,8 @@ describe('Make Wook Post', () => {
 
   it('generate post', async () => {
     try {
-      console.log("here")
       const res = await fetch('https://wookmark.fly.dev/generate');
-      console.log("here")
       this.wookPost = await res.text()
-      console.log(this.wookPost)
     } catch (err) {
       console.log(err)
     }

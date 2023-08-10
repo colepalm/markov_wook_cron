@@ -1,33 +1,35 @@
-FROM selenium/standalone-chrome:latest
+FROM --platform=linux/amd64 python:3.9-buster
 
-## Install latest stable Chrome
-## https://gerg.dev/2021/06/making-chromedriver-and-chrome-versions-match-in-a-docker-image/
-#RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | \
-#    tee -a /etc/apt/sources.list.d/google.list && \
-#    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | \
-#    apt-key add - && \
-#    apt-get update && \
-#    apt-get install -y google-chrome-stable libxss1
-#
-## Install the Chromedriver version that corresponds to the installed major Chrome version
-## https://blogs.sap.com/2020/12/01/ui5-testing-how-to-handle-chromedriver-update-in-docker-image/
-#RUN google-chrome --version | grep -oE "[0-9]{1,10}.[0-9]{1,10}.[0-9]{1,10}" > /tmp/chromebrowser-main-version.txt
-#RUN wget --no-verbose -O /tmp/latest_chromedriver_version.txt https://chromedriver.storage.googleapis.com/LATEST_RELEASE
-#RUN wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$(cat /tmp/latest_chromedriver_version.txt)/chromedriver_linux64.zip && rm -rf /opt/selenium/chromedriver && unzip /tmp/chromedriver_linux64.zip -d /opt/selenium && rm /tmp/chromedriver_linux64.zip && mv /opt/selenium/chromedriver /opt/selenium/chromedriver-$(cat /tmp/latest_chromedriver_version.txt) && chmod 755 /opt/selenium/chromedriver-$(cat /tmp/latest_chromedriver_version.txt) && ln -fs /opt/selenium/chromedriver-$(cat /tmp/latest_chromedriver_version.txt) /usr/bin/chromedriver
+# install google chrome
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-RUN sudo apt-get install -y nodejs
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
-#RUN npm ci
+RUN apt-get -y update
 
-# Bundle app source
+RUN apt-get install -y google-chrome-stable
+
+# install chromedriver
+
+RUN apt-get install -yqq unzip
+
+RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
+
+RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+
+# set display port to avoid crash
+
+ENV DISPLAY=:99
+
+# install selenium
+
+RUN pip install selenium==4.3.0
+
 COPY . .
 
-#RUN npm install -g mocha --silent
-#RUN npm install chai webdriverio --silent
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash
+RUN apt-get install -y nodejs
+RUN npm install
+
 RUN npm run test
