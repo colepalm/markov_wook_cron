@@ -15,28 +15,17 @@ try {
   const driver = new webdriver.Builder()
       .forBrowser('chrome')
       .setChromeOptions(options)
+      .setLoggingPrefs({ browser: 'ALL' })
       .build();
 
   describe('Make Wook Post', () => {
-    // before(async () => {
-    //   try {
-    //     await driver.manage().setTimeouts({
-    //       implicit: timeout,
-    //       pageLoad: timeout,
-    //       script: timeout
-    //     })
-    //   } catch(err) {
-    //     console.log(err)
-    //   }
-    // });
-    //
-    // it('generate post', async () => {
-    //   try {
-    //     this.wookPost = await fetch('https://wookmark.fly.dev/generate')
-    //   } catch (err) {
-    //     console.log(err)
-    //   }
-    // })
+    it('generate post', async () => {
+      try {
+        this.wookPost = await fetch('https://wookmark.fly.dev/generate')
+      } catch (err) {
+        console.log(err)
+      }
+    })
 
     // it('Direct to main phish page', async () => {
     //   await driver.get('https://phantasytour.com/bands/phish/threads');

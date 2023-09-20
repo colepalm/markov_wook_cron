@@ -44,6 +44,6 @@ RUN npm install
 # Copy the rest of the application code to the container
 COPY . .
 
-# Command to run your Selenium tests
+# Command to run Selenium tests
 RUN npm run test
 
