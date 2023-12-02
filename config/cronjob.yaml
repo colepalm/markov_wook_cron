@@ -1,9 +1,9 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: your-cron-job
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "*/30 * * * *"
   jobTemplate:
     spec:
       template:
@@ -11,4 +11,6 @@ spec:
           containers:
           - name: woomark
             image: colepalm/wookmark:0.6.0
+          imagePullSecrets:
+          - name: regcred
           restartPolicy: OnFailure

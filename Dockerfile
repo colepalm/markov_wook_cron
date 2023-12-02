@@ -25,4 +25,4 @@ RUN apt-get update && apt-get install -y \
     chromium-driver
 
 # Run the Python script as a cron job
-CMD ["cron", "-f"]
+CMD ["python", "src/test/test.py"]
